@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Demo: Add points to a web map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    /* The below provides css information such as the development of the sidebar, sidebar content, legends, and image container */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Futura, sans-serif;
+    }
+
+    #map-container {
+      position: relative;
+      height: 100%;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    #sidebar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 300px;
+      height: 100%;
+      background-color: #c0d6fc;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      font-family: Futura, Times, serif;
+    }
+
+    .sidebar-content {
+      margin-bottom: 20px;
+    }
+
+    .sidebar-button {
+      padding: 10px;
+      background-color: #ddd;
+      text-align: center;
+      cursor: pointer;
+      display: block; 
+      margin-bottom: 5px; 
+      border-radius: 25%;
+    }
+    .legend {
+      margin-top: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .legend-item div {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      border-radius: 50%;
+    }
+
+    .image-container {
+      margin-top: 20px; 
+      margin-bottom: 30px;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      max-height: calc(100% - 200px);
+    }
+  </style>
+</head>
+<body>
+  <div id="map-container">
+    <div id="map"></div>
+    <div id="sidebar">
+      <div class="sidebar-content">
+        <!-- This is the sidebar content -->
+        <div>
+          <h2>Stamford Speed Safety Cameras</h2>
+          <p>Speed Safety Cameras, officially known has Automated Traffic Enforcement Safety Devices, are a Federal Highways Administration Proven Safety Countermeasure and a key component of Stamford Vision Zero program to eliminate fatal and serious injury crashes by 2032. By reducing vehicle speeds through Speed Safety Cameras, we're improving safety on Stamford's streets.</p>
+        </div>
+        <p>Click on a point to see the proposed Speed Safety Camera Locations</p>
+        <div>
+            <!-- This is sidebar button info. These links bring you to other webpages -->
+          <a href="https://www.stamfordct.gov/government/stamford-vision-zero/speed-safety-cameras" class="sidebar-button" target="_blank">Speed Safety Cameras</a>
+          <a href="https://www.stamfordct.gov/government/vision-zero-927" class="sidebar-button" target="_blank">Stamford Vision Zero</a>
+          <a href="https://www.stamfordct.gov/government/stamford-vision-zero/vision-zero-action-plan" class="sidebar-button" target="_blank">Vision Zero Action Plan</a>
+        </div>
+      </div>
+      <div class="legend">
+        <h3>Speed Safety Camera Location</h3>
+        <div class="legend-item"> 
+          <div style="background-color: #345ff9;"></div>
+        </div>
+      </div>
+      <div class="image-container">
+        <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Logo_of_Stamford%2C_Connecticut.svg/1280px-Logo_of_Stamford%2C_Connecticut.svg.png">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Logo_of_Stamford%2C_Connecticut.svg/1280px-Logo_of_Stamford%2C_Connecticut.svg.png" alt="Cityofstamfordlogo">
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+    // This accesses the base mapbox information
+    mapboxgl.accessToken = 'pk.eyJ1IjoidHJhZmZpYy1sdWtlIiwiYSI6ImNsdzc1czM4eTF1aGMyaW8wMG1ndmVhdHQifQ.fOIIAiPV8HIh3DGnlVMH_w';
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/traffic-luke/clw8ailv8007701nxbry9dgcn',
+      center: [-73.542385, 41.051105],
+      zoom: 12
+    });
+// This code descibes how the mouse cursor changes to a pointer when hovering over a point on the map
+    map.on('mouseenter', 'speed-cameras', function () {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+
+    map.on('mouseleave', 'speed-cameras', function () {
+      map.getCanvas().style.cursor = '';
+    });
+// This code activates the pop up info
+    map.on('click', (event) => {
+      const features = map.queryRenderedFeatures(event.point, {
+        layers: ['speed-cameras']
+      });
+      if (!features.length) {
+        return;
+      }
+      const feature = features[0];
+
+      const popup = new mapboxgl.Popup({ offset: [0, -15] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML(
+          `<h3>${feature.properties.Road}</h3><p>${feature.properties.School}</p>`
+        )
+        .addTo(map);
+    });
+  </script>
+</body>
+</html>
