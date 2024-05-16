@@ -46,14 +46,18 @@
     }
 
     .sidebar-button {
-      padding: 10px;
-      background-color: #ddd;
-      text-align: center;
-      cursor: pointer;
-      display: block; 
-      margin-bottom: 5px; 
-      border-radius: 25%;
-    }
+  padding: 10px;
+  background-color: #ddd;
+  text-align: center;
+  cursor: pointer;
+  display: block;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease; 
+}
+
+.sidebar-button:hover {
+  background-color: #ccc; 
+}
     .legend {
       margin-top: 10px;
     }
@@ -118,7 +122,7 @@
   </div>
 
 
-  
+
   <script>
     // This accesses the base mapbox information
     mapboxgl.accessToken = 'pk.eyJ1IjoidHJhZmZpYy1sdWtlIiwiYSI6ImNsdzc1czM4eTF1aGMyaW8wMG1ndmVhdHQifQ.fOIIAiPV8HIh3DGnlVMH_w';
